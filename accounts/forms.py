@@ -1,7 +1,7 @@
-from .models import User
+from .models import User # 1) 내가 만든 모델 불러오기
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-class CustomUserCreationForm(UserCreationForm):
+class CustomUserCreationForm(UserCreationForm): #회원가입 정보 : id, 비번
     class Meta():
         model = User
         #fields = '__all__'

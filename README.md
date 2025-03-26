@@ -1,6 +1,6 @@
 ## auth 구조 
 - 로그인 기능 
-- user 
+- user (modeling)
     - username
     - passward
     - name
@@ -28,13 +28,13 @@
 
 
 ## 0. setting
-- 프로젝트 이름 : auth
+- 프로젝트 이름 : auth .
 - 앱 이름 : accounts 작성
 - 공통 html 설정 : 밖에 templates에 base.html 만들기 
 
 ## 1. User 로그인 modeling
-- `확장 가능성을 열어두고 커스텀` : 커스텀하면 넣고 싶은 기능을 확장가능  
-    - AbstractUser : 장고안에 이미 로그인 기본 모델 구현
+- `AbstractUser` : 사용자 인증을 위한 User 모델을 커스터마이징하고 싶을때
+`models.py`
 ```python
 from django.contrib.auth.models import AbstractUser
 # Create your models here.
@@ -49,6 +49,8 @@ class User(AbstractUser):
     - AUTH_USER_MODEL = 'accounts.User'
 
 - `migrations 하기`
+- python manage.py makemigraions
+- python manage.py migrate
 
 ## 2. create (signup 회원가입)
 - `프로젝트 urls.py` : 앱으로 경로 설정 
@@ -81,7 +83,7 @@ from django.contrib.auth.forms import UserCreationForm
 class CustomUserCreationForm(UserCreationForm):
     class Meta():
         model = User
-        fields = '__all__'
+        fields= ('username',) # username만 / but, password는 필수라서 같이 나옴
 # UserCreationForm : 장고가 만든 User대신 내가 만든 Userform을 사용
 ```
 
@@ -102,7 +104,7 @@ def signup(request):
     }
     return render(request, 'signup.html', context)
 ```
-`signup.html` : base.html
+`signup.html` : base.html 기반
 ```
 {% extends 'base.html' %}
 
@@ -110,12 +112,6 @@ def signup(request):
     {{form}}
 {% endblock %}
 ```
-
-- `forms.py` : 필요없는 정보 빼고 네임, 비번만 남기기
-```python 
-fields= ('username',) # password는 필수라서 같이 나옴
-```
-
 - `views.py`
 ```python
 def signup(request):
@@ -139,9 +135,11 @@ def signup(request):
 ## 3. 로그인 기본 구조
 - user -> myid, mypassward를 장고에게 전달 -> session 값을 create -> cookie에 저장
     - cookie : session값이 저장되어 있으면 로그인
-    - expire_date: 짧을 수록 로그인 다시 해야 함. (보통 2주)
+    - expire_date: 짧을수록 로그인 다시 해야 함. (보통 2주)
 
-### 3.1 create (로그인)
+![UserCreationForm vs AuthenticationForm](./asdf/이미지1.png)
+
+### 3.1 create (login 로그인)
 `앱 내 urls.py` : 로그인 경로 설정
 ```python
 path('login/', views.login, name='login'),
@@ -155,11 +153,13 @@ class CustomAuthenticationForm(AuthenticationForm):
 
 `앱 내 views.py` : login 함수 만들기
 ```python
+from django.contrib.auth import login as auth_login # 내가 만든 함수 login과 중복되므로 장고 login의 이름을 바꿈.
+
 def login(request):
     if request.method == 'POST':  # session 정보 생성
         form = CustomAuthenticationForm(request, request.POST)
         if form.is_valid():
-            auth_login(request, form.get_user())
+            auth_login(request, form.get_user()) # 로그인할 사용자 반환
             return redirect('accounts:login') # 게시글의 인덱스 페이지로
 
 
@@ -176,11 +176,6 @@ def login(request):
 `앱 내 urls.py` : 로그아웃 경로 만들기
 ```
 path('logout/', views.logout, name = logout)
-```
-`앱 내 forms.py` : form 로그아웃 생성
-```python
-class CustomAuthenticationForm(AuthenticationForm):
-    pass
 ```
 
 `앱 내 views.py` : 로그아웃 함수 만들기

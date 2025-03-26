@@ -8,15 +8,14 @@ from django.contrib.auth import logout as auth_logout
 def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
-        if form.is_valid(): # 유효한 값은 저장 / 잘못된 값은 사라짐
+        if form.is_valid(): # 유효한 값만 저장 / 유효하지 않다면 저장x
             form.save()
-            return redirect('accounts:login') 
-
-    else:    # 1) get 요청 (내가 만든 Userform 보여주기)
+            return redirect('accounts:index')
+    else:
         form = CustomUserCreationForm()
 
     context = {
-        'form':form,
+        'form': form
     }
     return render(request, 'signup.html', context)
 
@@ -26,12 +25,12 @@ def login(request):
         if form.is_valid():
             auth_login(request, form.get_user())
             
-            # /accounts/login/ => 
-            # /accounts/login/?next=/articles/create/ => 
+            # /accounts/login/ => create로
+            # /accounts/login/?next=/articles/create/ => 로그인 안하고 게시글 작성하려 할때
             next_url = request.GET.get('next')
 
-            # next가 없을때 => None or 'articles:index'
-            # next가 있을때 => 'articles/create' or 'articles/index'
+            # next가 없을때 => None or 'articles:index'(o)
+            # next가 있을때 => 'articles/create'(o) or 'articles/index'
             return redirect(next_url or 'articles:index') # 게시글의 인덱스 페이지로
 
 
