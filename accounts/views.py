@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib.auth import login as auth_login # 내가 만든 함수 login과 중복되므로 장고 login의 이름을 바꿈.
+from django.contrib.auth import logout as auth_logout 
 
 # Create your views here.
 
@@ -24,7 +25,7 @@ def login(request):
         form = CustomAuthenticationForm(request, request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect('articles:index') # 게시글의 인덱스 페이지로
+            return redirect('accounts:login') # 게시글의 인덱스 페이지로
 
 
     else:   #로그인 get 요청 보여주기
@@ -35,3 +36,7 @@ def login(request):
     }
     
     return render(request, 'login.html', context)
+
+def logout(request):
+    auth_logout(request)
+    return redirect('accounts:login')

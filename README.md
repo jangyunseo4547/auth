@@ -156,10 +156,14 @@ class CustomAuthenticationForm(AuthenticationForm):
 `앱 내 views.py` : login 함수 만들기
 ```python
 def login(request):
-    if request.method == 'POST':
-        pass
+    if request.method == 'POST':  # session 정보 생성
+        form = CustomAuthenticationForm(request, request.POST)
+        if form.is_valid():
+            auth_login(request, form.get_user())
+            return redirect('accounts:login') # 게시글의 인덱스 페이지로
 
-    else:   
+
+    else:   #로그인 get 요청 보여주기
         form = CustomAuthenticationForm()
 
     context = {
