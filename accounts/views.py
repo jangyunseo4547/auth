@@ -25,7 +25,14 @@ def login(request):
         form = CustomAuthenticationForm(request, request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect('accounts:login') # 게시글의 인덱스 페이지로
+            
+            # /accounts/login/ => 
+            # /accounts/login/?next=/articles/create/ => 
+            next_url = request.GET.get('next')
+
+            # next가 없을때 => None or 'articles:index'
+            # next가 있을때 => 'articles/create' or 'articles/index'
+            return redirect(next_url or 'articles:index') # 게시글의 인덱스 페이지로
 
 
     else:   #로그인 get 요청 보여주기

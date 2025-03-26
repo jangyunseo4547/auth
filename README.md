@@ -240,3 +240,7 @@ def index(request):
     return render(request, 'index.html')
 ```
 ## article create
+
+### 단축평가 
+- t -> t 
+- f -> 두번째 정보 
