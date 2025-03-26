@@ -135,13 +135,13 @@ def signup(request):
     </form>
 {% endblock %}
 ```
-
-## 3. create (로그인) 
+ 
 ### 로그인 기본 구조
 - user -> myid, mypassward를 장고에게 전달 -> session 값을 create -> cookie에 저장
     - cookie : session값이 저장되어 있으면 로그인
     - expire_date: 짧을 수록 로그인 다시 해야 함. (보통 2주)
 
+## 3.1 create (로그인)
 `앱 내 urls.py` : 로그인 경로 설정
 ```python
 path('login/', views.login, name='login'),
@@ -171,4 +171,25 @@ def login(request):
     }
     
     return render(request, 'login.html', context)
+```
+## 3.2 create(로그아웃)
+`앱 내 urls.py` : 로그아웃 경로 만들기
+```
+path('logout/', views.logout, name = logout)
+```
+`앱 내 forms.py` : 
+```python
+class CustomAuthenticationForm(AuthenticationForm):
+    pass
+```
+
+`앱 내 views.py` : 로그아웃 함수 만들기
+```python
+def logout(request):
+    auth_logout(request)
+    return redirect('accounts:login')
+```
+
+### 로그인 유무에 따른 nav 구조 변경
+```
 ```
