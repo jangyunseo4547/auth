@@ -1,4 +1,4 @@
-## auth
+## auth 구조 
 - 로그인 기능 
 - user 
     - username
@@ -20,3 +20,7 @@
     - post_id
 
 - => 1:N 관계 (로그인 - 게시글 - 댓글 )
+
+## 0. setting
+프로젝트 이름 : auth
+앱 이름 : accounts
