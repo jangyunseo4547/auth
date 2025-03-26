@@ -136,12 +136,12 @@ def signup(request):
 {% endblock %}
 ```
  
-### 로그인 기본 구조
+## 3. 로그인 기본 구조
 - user -> myid, mypassward를 장고에게 전달 -> session 값을 create -> cookie에 저장
     - cookie : session값이 저장되어 있으면 로그인
     - expire_date: 짧을 수록 로그인 다시 해야 함. (보통 2주)
 
-## 3.1 create (로그인)
+### 3.1 create (로그인)
 `앱 내 urls.py` : 로그인 경로 설정
 ```python
 path('login/', views.login, name='login'),
@@ -172,12 +172,12 @@ def login(request):
     
     return render(request, 'login.html', context)
 ```
-## 3.2 create(로그아웃)
+### 3.2 create(로그아웃)
 `앱 내 urls.py` : 로그아웃 경로 만들기
 ```
 path('logout/', views.logout, name = logout)
 ```
-`앱 내 forms.py` : 
+`앱 내 forms.py` : form 로그아웃 생성
 ```python
 class CustomAuthenticationForm(AuthenticationForm):
     pass
@@ -190,8 +190,9 @@ def logout(request):
     return redirect('accounts:login')
 ```
 
-### 로그인 유무에 따른 nav 구조 변경
-```shell
+### 3.3 로그인 유무에 따른 nav 구조 변경
+- `base.html`
+```python
 <nav class="nav">
         {% if user.is_authenticated %} # if문으로 로그인할때 User, logout
         <a href="" class="nav-link disabled">{{user}}</a>
@@ -204,3 +205,38 @@ def logout(request):
         {% endif %}
     </nav>
 ```
+
+## 4. article modeling (게시글 만들기)
+- 앱 설정 `python manage.py startapp articles`
+- settings에 앱 적기 
+- `modeling`
+```python
+from django.conf import settings # 2
+
+# Create your models here.
+class Article(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+
+    # 2. setting.py 변수 활용
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+```
+- migrations
+`urls.py` : articles 경로 설정
+`forms.py` : article form 만들기
+```python
+from .models import Article
+
+class ArticleForm(ModelForm):
+    class Meta():
+        model = Article
+        # fields = '__all__'
+        # fields = ('title', 'content', ) # user 정보만 빼고 보여줌.
+        exclude = ('user',)
+```
+`views.py`
+```python
+def index(request):
+    return render(request, 'index.html')
+```
+## article create
