@@ -191,5 +191,16 @@ def logout(request):
 ```
 
 ### 로그인 유무에 따른 nav 구조 변경
-```
+```shell
+<nav class="nav">
+        {% if user.is_authenticated %} # if문으로 로그인할때 User, logout
+        <a href="" class="nav-link disabled">{{user}}</a>
+        <a href="{% url 'accounts:logout' %}" class="nav-link">logout</a>
+
+        {% else %} # else문 로그아웃할때 signup, login
+        <a href="{% url 'accounts:signup' %}" class="nav-link">signup</a>
+        <a href="{% url 'accounts:login' %}" class="nav-link">login</a>
+
+        {% endif %}
+    </nav>
 ```
