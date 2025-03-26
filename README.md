@@ -21,9 +21,12 @@
 
 - => 1:N 관계 (로그인 - 게시글 - 댓글 )
 
+## 암호가 이루어 지는 구조
 - 암호화 : 평문을 난수로 바꿈
     - hash함수 : sha1(암호로 유추가능) -> sha256(유추 불가)
     - salt  : sha로 생성된 숫자 + (랜덤 숫자) 붙이기
+
+
 ## 0. setting
 - 프로젝트 이름 : auth
 - 앱 이름 : accounts 작성
@@ -131,4 +134,37 @@ def signup(request):
         <input type="submit">
     </form>
 {% endblock %}
+```
+
+## 3. create (로그인) 
+### 로그인 기본 구조
+- user -> myid, mypassward를 장고에게 전달 -> session 값을 create -> cookie에 저장
+    - cookie : session값이 저장되어 있으면 로그인
+    - expire_date: 짧을 수록 로그인 다시 해야 함. (보통 2주)
+
+`앱 내 urls.py` : 로그인 경로 설정
+```python
+path('login/', views.login, name='login'),
+```
+
+`앱 내 forms.py` : form login 생성
+```python
+class CustomAuthenticationForm(AuthenticationForm):
+    pass
+```
+
+`앱 내 views.py` : login 함수 만들기
+```python
+def login(request):
+    if request.method == 'POST':
+        pass
+
+    else:   
+        form = CustomAuthenticationForm()
+
+    context = {
+        'form':form,
+    }
+    
+    return render(request, 'login.html', context)
 ```
