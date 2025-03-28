@@ -16,8 +16,8 @@
 - Comment
     - UniqueID
     - content
-    - user_id
-    - post_id
+    - user_id : User와 1:N
+    - post_id : article과 1:N
 
 - => 1:N 관계 (로그인 - 게시글 - 댓글 )
 
@@ -218,6 +218,17 @@ class Article(models.Model):
 ```
 - migrations
 `urls.py` : articles 경로 설정
+```python
+from . import views
+
+app_name = 'articles'
+
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('create/', views.create, name='create'),
+]
+```
+
 `forms.py` : article form 만들기
 ```python
 from .models import Article
@@ -232,10 +243,37 @@ class ArticleForm(ModelForm):
 `views.py`
 ```python
 def index(request):
-    return render(request, 'index.html')
+    articles = Article.objects.all()
+    context = {
+        'articles':articles,
+    }
+    return render(request, 'index.html',context)
+
+def create(request):
+     if request.method == 'POST':
+         form = ArticleForm(request.POST) # title, content
+         if form.is_valid(): 
+             article = form.save(commit=False) # 임시 저장
+             article.user = request.user # 로그인한 유저 정보
+             article.save()
+             return redirect('articles:index')
+     else:
+         form = ArticleForm()
+     
+     context = {
+         'form':form,
+     }
+     return render(request, 'create.html', context)
 ```
-## article create
+## 프로젝트에 경로 설정
+`path('articles/', include('articles.urls')),`
+
+## login_required, next 인자 처리
+
 
 ### 단축평가 
 - t -> t 
 - f -> 두번째 정보 
+
+## comment
+

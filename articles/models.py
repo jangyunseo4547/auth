@@ -4,6 +4,8 @@ from django.conf import settings # 2
 from django.contrib.auth import get_user_model # 3
 
 # Create your models here.
+
+# 게시글 모델
 class Article(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -16,3 +18,9 @@ class Article(models.Model):
     
     # 3. get_user_model
     # user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+
+# 댓글 모델
+class Comment(models.Model):
+    content = models.TextField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)    # 1:N
+    article = models.ForeignKey(Article, on_delete=models.CASCADE) # 1:N

@@ -1,12 +1,12 @@
 from django.shortcuts import render,redirect
-from .forms import ArticleForm
 from .models import Article
+from .forms import ArticleForm
 from django.contrib.auth.decorators import login_required # create 함수 꾸며줌
 
 # Create your views here.
 def index(request):
-    articles = Article.objects.all()
-    context = {
+    articles = Article.objects.all() # 1) 전체 게시글 불러오기
+    context = {                      # 2) 전체 게시글 담아서 렌더
         'articles':articles,
     }
     return render(request, 'index.html', context)

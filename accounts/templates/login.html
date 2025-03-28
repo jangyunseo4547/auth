@@ -3,8 +3,10 @@
 {% block body %}
     <form action="" method="POST">
         {% csrf_token %}
+        <hr>
         {{form}}
-        <input type="submit">
+        <hr>
+        <input type="submit" class="btn btn-danger mt-4">
     </form>
     
 {% endblock %}
