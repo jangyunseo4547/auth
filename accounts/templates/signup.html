@@ -4,7 +4,7 @@
 {% block body %}
     <form action="" method="POST">
         {% csrf_token %}
-        {% bootstrap_form form %}
+        {% bootstrap_form form show_label=False %}
         <input type="submit" class="btn btn-success">
     </form>
 {% endblock %}

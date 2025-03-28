@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib.auth import login as auth_login # 내가 만든 함수 login과 중복되므로 장고 login의 이름을 바꿈.
 from django.contrib.auth import logout as auth_logout 
+from .models import User
 
 # Create your views here.
 
@@ -46,3 +47,11 @@ def login(request):
 def logout(request):
     auth_logout(request)
     return redirect('accounts:login')
+
+def profile(request, username):
+    user_profile = User.objects.get(username=username) # username을 기반으로 찾기 (user는 중복되지 않기 때문에)
+
+    context = {
+        'user_profile':user_profile,     # 내가 쓰는 유저 이름 바꿔주기 (장고 유저와 충돌 방지)
+    }
+    return render(request, 'profile.html', context)

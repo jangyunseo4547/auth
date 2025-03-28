@@ -305,3 +305,5 @@ def create(request):
 
 `signup.html`
 
+## 프로필 
+- 로그인한 계정이 작성한 게시글만 보도록 
