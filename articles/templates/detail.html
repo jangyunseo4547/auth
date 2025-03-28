@@ -12,4 +12,9 @@
         {{form}}
         <input type="submit" class="btn btn-warning mt-3">
     </form>
+
+    <hr>
+    {% for comment in article.comment_set.all %}
+        <li>{{comment.user}}-{{comment.content}}</li>
+    {% endfor %}
 {% endblock %}
