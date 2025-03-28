@@ -284,5 +284,14 @@ def create(request):
 - 로그인한 사람 = 댓글 쓴 사람 일치할 때
     - -> if문으로 구현
 
-- 직접 경로로 들어가면 게시글을 지울 수 있음
-    - -> 
+- 직접 경로로 들어가면 게시글을 지울 수 있음 방지
+    - -> if문으로 구현
+```
+{% if user == article.user %}
+    <a href="{% url 'articles:update' article.id %}">update</a>
+    <a href="{% url 'articles:delete' article.id %}">delete</a>
+    {% endif %}
+```
+
+## 댓글 좋아요
+- N:N 

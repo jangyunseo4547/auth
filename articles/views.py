@@ -38,13 +38,32 @@ def detail(request, id):
     return render(request, 'detail.html', context)
 
 @login_required
+def update(request,id):
+    article = Article.objects.get(id=id)
+
+    if request.user != article.user:  # 게시글 작성한 사람만 수정 가능
+        return redirect('articles:index')
+
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, instance=article)
+        if form.is_valid():
+            form.save()
+            return redirect('articles:detail', id=id)
+    else:
+        form = ArticleForm(instance=article) # article 가져오기
+    
+    context= {
+        'form':form,
+    }
+    return render(request, 'update.html',context)
+
+@login_required
 def delete(request,id):
     article = Article.objects.get(id=id)
     if request.user == article.user:
         article.delete()
 
     return redirect('articles:index')
-
 
 @login_required
 def comment_create(request, article_id):
