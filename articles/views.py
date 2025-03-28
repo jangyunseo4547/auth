@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from .models import Article
-from .forms import ArticleForm
+from .forms import ArticleForm, CommentForm
 from django.contrib.auth.decorators import login_required # create 함수 꾸며줌
 
 # Create your views here.
@@ -27,3 +27,33 @@ def create(request):
         'form':form,
     }
     return render(request, 'create.html', context)
+
+def detail(request, id):
+    article = Article.objects.get(id=id)
+    form = CommentForm()    # detail 페이지에 댓글
+    context = {
+        'article':article,
+        'form':form,
+    }
+    return render(request, 'detail.html', context)
+
+@login_required
+def comment_create(request, article_id):
+    form = CommentForm(request.POST)  # get 요청으로 들어오는 경우가 없기 때문에
+
+    if form.is_valid():
+        comment = form.save(commit=False)
+
+        # 1) 객체를 저장하는 경우
+        # comment.user = request.user # 유저찾기
+        # article = Article.objects.get(id=article_id) # 게시글 
+        # comment.article = article
+
+        # 2) id 값을 저장하는 경우
+        comment.user_id = request.user.id   # db는 user_id를 저장하기 때문에 지원해줌.
+        comment.article_id = article_id
+
+        comment.save()
+
+        return redirect('articles:detail', id=article_id)
+        

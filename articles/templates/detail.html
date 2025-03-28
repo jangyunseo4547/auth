@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h1>{{article.title}}</h1>
+    <p>{{article.content}}</p>
+    <p>{{article.user}}</p>
+
+    <hr>
+
+    <form action="{% url 'articles:comment_create' article.id %}" method="POST">
+        {% csrf_token %}
+        {{form}}
+        <input type="submit" class="btn btn-warning mt-3">
+    </form>
+{% endblock %}

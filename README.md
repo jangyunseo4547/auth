@@ -275,5 +275,8 @@ def create(request):
 - t -> t 
 - f -> 두번째 정보 
 
+## comment modeling, mirate
+
+
 ## comment
 
