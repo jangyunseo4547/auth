@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
+{% load bootstrap5 %}
 
 {% block body %}
     <form action="" method="POST">
         {% csrf_token %}
         <hr>
-        {{form}}
+        {% bootstrap_form form show_label=False %}
         <hr>
         <input type="submit" class="btn btn-danger mt-4">
     </form>

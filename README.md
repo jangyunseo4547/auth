@@ -294,4 +294,14 @@ def create(request):
 ```
 
 ## 댓글 좋아요
-- N:N 
+- N:N : 좋아요 할 수 있는 기능이 한 계정당 하나
+
+
+## 장고에 다른사람이 만든 라이브러리 사용하기 
+`pip install django-bootstrap-v5`
+    - 원래 장고를 지우고 라이브러리에 맞는 다른 버전의 장고를 설치해줌.
+
+`settings.py` : 'bootstrap5' 앱 등록해주기
+
+`signup.html`
+
